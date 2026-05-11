@@ -2,13 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import authenticate
 from .serializers import RegisterSerializer
 
 
 class RegisterView(APIView):
-
+    """Handles user registration."""
     def post(self, request):
+        """Creates a new user account."""
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -17,8 +19,9 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-
+    """Handles user login and sets JWT cookies."""
     def post(self, request):
+        """Authenticates the user and returns JWT tokens as HTTP-only cookies."""
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
@@ -39,13 +42,13 @@ class LoginView(APIView):
         response.set_cookie('refresh_token', refresh_token, httponly=True, samesite='Lax')
         return response
     
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.exceptions import TokenError
+
 
 
 class LogoutView(APIView):
-
+    """Handles user logout and blacklists the refresh token."""
     def post(self, request):
+        """Logs out the user and deletes all auth cookies."""
         refresh_token = request.COOKIES.get('refresh_token')
         if refresh_token is None:
             return Response({'detail': 'No refresh token found.'}, status=status.HTTP_401_UNAUTHORIZED)
