@@ -1,7 +1,7 @@
 import yt_dlp
 import os
 import whisper
-from groq import Groq
+from google import genai
 from django.conf import settings
 import json
 
@@ -57,15 +57,15 @@ def build_quiz_prompt(transcript):
 
 
 def generate_quiz(transcript):
-    """Generates a quiz with 10 questions and 4 options using Groq AI."""
-    client = Groq(api_key=settings.GROQ_API_KEY)
+    """Generates a quiz with 10 questions and 4 options using Gemini Flash AI."""
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
     prompt = build_quiz_prompt(transcript)
-    response = client.chat.completions.create(
-        model='llama-3.3-70b-versatile',
-        messages=[{'role': 'user', 'content': prompt}],
-        response_format={'type': 'json_object'},
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=prompt
     )
-    return json.loads(response.choices[0].message.content)
+    cleaned = response.text.strip().removeprefix('```json').removeprefix('```').removesuffix('```').strip()
+    return json.loads(cleaned)
 
 
 def process_youtube_url(url):
