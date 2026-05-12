@@ -9,6 +9,7 @@ from .serializers import RegisterSerializer
 
 class RegisterView(APIView):
     """Handles user registration."""
+
     def post(self, request):
         """Creates a new user account."""
         serializer = RegisterSerializer(data=request.data)
@@ -20,6 +21,7 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     """Handles user login and sets JWT cookies."""
+
     def post(self, request):
         """Authenticates the user and returns JWT tokens as HTTP-only cookies."""
         username = request.data.get('username')
@@ -39,14 +41,14 @@ class LoginView(APIView):
             }
         }, status=status.HTTP_200_OK)
         response.set_cookie('access_token', access_token, httponly=True, samesite='Lax')
-        response.set_cookie('refresh_token', refresh_token, httponly=True, samesite='Lax')
+        response.set_cookie('refresh_token', refresh_token,
+                            httponly=True, samesite='Lax')
         return response
-    
-
 
 
 class LogoutView(APIView):
     """Handles user logout and blacklists the refresh token."""
+
     def post(self, request):
         """Logs out the user and deletes all auth cookies."""
         refresh_token = request.COOKIES.get('refresh_token')
@@ -57,11 +59,12 @@ class LogoutView(APIView):
             token.blacklist()
         except TokenError:
             return Response({'detail': 'Token is invalid or expired.'}, status=status.HTTP_401_UNAUTHORIZED)
-        response = Response({'detail': 'Log-Out successfully! All Tokens will be deleted. Refresh token is now invalid.'})
+        response = Response(
+            {'detail': 'Log-Out successfully! All Tokens will be deleted. Refresh token is now invalid.'})
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
-    
+
 
 class TokenRefreshView(APIView):
     """Handles refreshing the access token using the refresh token cookie."""
@@ -75,7 +78,8 @@ class TokenRefreshView(APIView):
             token = RefreshToken(refresh_token)
             access_token = str(token.access_token)
             response = Response({'detail': 'Token refreshed'})
-            response.set_cookie('access_token', access_token, httponly=True, samesite='Lax')
+            response.set_cookie('access_token', access_token,
+                                httponly=True, samesite='Lax')
             return response
         except TokenError:
             return Response({'detail': 'Token is invalid or expired.'}, status=status.HTTP_401_UNAUTHORIZED)
