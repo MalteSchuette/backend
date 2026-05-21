@@ -61,6 +61,9 @@ pip install -r requirements.txt
 ```
 
 4. Create a `.env` file based on `.env.example`
+```bash
+cp .env.example .env
+```
 
 5. Run migrations
 ```bash

@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """Serializer for user registration including password confirmation."""
 
     confirmed_password = serializers.CharField(write_only=True)
 
@@ -14,11 +15,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, data):
+        """Ensure password and confirmed_password match."""
         if data['password'] != data['confirmed_password']:
             raise serializers.ValidationError({'password': 'Passwords do not match.'})
         return data
 
     def create(self, validated_data):
+        """Create a new user after removing the confirmation field."""
         validated_data.pop('confirmed_password')
         user = User.objects.create_user(**validated_data)
         return user
