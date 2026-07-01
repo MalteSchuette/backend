@@ -2,6 +2,8 @@
 
 A Django REST API that generates quizzes from YouTube videos using AI.
 
+**Frontend Repository:** https://github.com/Developer-Akademie-Backendkurs/project.Quizly
+
 ## Tech Stack
 
 - **Django** - Backend Framework
@@ -37,7 +39,7 @@ Download from https://ffmpeg.org/download.html and add to PATH.
 
 1. Clone the repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/MalteSchuette/Quizly_backend
 cd backend
 ```
 
