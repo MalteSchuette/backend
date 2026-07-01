@@ -11,7 +11,7 @@ A Django REST API that generates quizzes from YouTube videos using AI.
 - **SimpleJWT** - JWT Authentication
 - **yt-dlp** - YouTube Audio Download
 - **Whisper AI** - Audio Transcription
-- **Groq (LLaMA 3.3)** - Quiz Generation
+- **Gemini 2.5 Flash** - Quiz Generation
 - **SQLite** - Database
 
 ## Requirements
@@ -106,5 +106,5 @@ python manage.py runserver
 1. User submits a YouTube URL
 2. **yt-dlp** downloads the audio from the video
 3. **Whisper AI** transcribes the audio locally
-4. **Groq (LLaMA 3.3)** generates a quiz with 10 questions from the transcript
+4. **Gemini 2.5 Flash** generates a quiz with 10 questions from the transcript
 5. Quiz is saved to the database and returned to the user
